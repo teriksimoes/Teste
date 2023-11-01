@@ -1,0 +1,26 @@
+SUB CREATE_LOG
+
+	LOG_CARGA:
+	LOAD
+		Null() as CARGA
+		, Null() as HORA_INICIO
+		, Null() as HORA_FIM
+		, Null() as QUANTIDADE
+	AutoGenerate 0;
+
+    LET LOG_START = Now()
+    
+	LET _LOG_NO_OF_ROWS = 
+
+	CONCATENATE ( LOG_CARGA )
+	LOAD
+		'$(_TABLE_NAME_)' AS CARGA
+		, '$(LOG_START)' AS HORA_INICIO
+		, '$(_LOG_FINISH)' AS HORA_FIM
+		, '$(_LOG_NO_OF_ROWS)' AS QUANTIDADE
+	AutoGenerate 1;
+
+END SUB
+    
+    
+

@@ -1,0 +1,44 @@
+
+//*******************************************
+SUB PARAMETROS
+
+    CRIAR CONEXAO COM O BANCO
+
+    [PARAMETROS]:
+    SELECT
+        authorization
+        , user_access
+    FROM tabela
+    WHERE owner = '$(OWNER)'
+
+    LET BEARER_TOKEN = authorization;
+    LET USER_ACCESS = user_access;
+
+    DISCONNECT;
+
+END SUB
+
+//*******************************************
+
+SUB APP_TYPE
+
+    SWITCH UPPER('$(APP_TYPE)')
+
+    CASE 'DIMENSAO'
+        LET _SCRIPT_ROOT = 'lib://GitHub - teriksimoes/aderencia/BethaCloud/blob/main/Scripts/Dimensao';
+
+    CASE 'FATO'
+        LET _SCRIPT_ROOT = 'lib://GitHub - teriksimoes/aderencia/BethaCloud/blob/main/Scripts/Fato';
+
+    CASE 'SNAPSHOT'
+        LET _SCRIPT_ROOT = 'lib://GitHub - teriksimoes/aderencia/BethaCloud/blob/main/Scripts/Snapshot';
+
+    CASE 'DASHBOARD'
+        LET _SCRIPT_ROOT = 'lib://GitHub - teriksimoes/aderencia/BethaCloud/blob/main/Scripts/Dashboard';    
+
+END SUB 
+
+//*******************************************
+
+// CALL PARAMETROS;
+CALL APP_TYPE;

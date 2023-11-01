@@ -1,0 +1,49 @@
+SUB MAKE_DATES(_NOW)
+
+	LET vNow = Timestamp(Alt(_NOW, Now()));
+
+	TRACE;
+	TRACE DATA REFERÊNCIA DA EXECUÇÃO = $(vNow);
+	TRACE;
+
+	LET vThisHour = Hour(vNow);
+	LET vLastHour = Timestamp(vNow - '01:00:00');
+	LET vHour = Num(Hour(vLastHour), '##00');
+	LET vToday = DayName(vLastHour);
+	LET vYesterday = DayName(vToday, -1);
+	LET vTomorrow = DayName(vToday, 1);
+	LET vSimpleTodayFormat = Date(vToday, 'YYYY-MM-DD');
+	LET vSimpleYesterdayFormat = Date(vYesterday, 'YYYY-MM-DD');
+	LET vSimpleTomorrowFormat = Date(vTomorrow, 'YYYY-MM-DD');
+	LET vTodayJulianFormat = $(DateToJdeJulianDate(vToday));
+	LET vYesterdayJulianFormat = $(DateToJdeJulianDate(vYesterday));
+	LET vMonthStart = DayName(MonthStart(vYesterday));
+	LET vMonthStartOfToday = DayName(MonthStart(vToday));
+	LET vMonthEnd = DayName(MonthEnd(vYesterday));
+	LET vLastMonthEnd = DayName(MonthEnd(vYesterday, -1));
+	LET vSimpleLastMonthEndFormat = Date(vLastMonthEnd, 'YYYY-MM-DD');
+	LET vDayOfToday = Num(Day(vToday),'##00');
+	LET vMonthOfToday = Num(Month(vToday),'##00');
+	LET vYearOfToday = Year(vToday);
+	LET vDayOfYesterday = Num(Day(vYesterday),'##00');
+	LET vMonthOfYesterday = Num(Month(vYesterday),'##00');
+	LET vYearOfYesterday = Year(vYesterday);
+	LET vLastDayOfLastMonth = DayName(vMonthStart - 1);
+	LET vLastDayOfLastMonth = DayName(vMonthStart - 1);
+	LET vFirstDayOfLastMonth = MonthStart(DayName(vMonthStart - 1));
+	LET vFirstDayOfLastMonthJulianFormat = $(DateToJdeJulianDate(vFirstDayOfLastMonth));
+	LET vMonthNoOfLastMonth = Num(Month(vLastDayOfLastMonth),'##00');
+	LET vYearNoOfLastMonth = Year(vLastDayOfLastMonth);
+	LET vFirstWorkDate = DayName(FirstWorkDate(vMonthEnd, NetWorkDays(vMonthStart, vMonthEnd) - 1));
+	LET vNumericToday = Num(vToday);
+	LET vNumericYesterday = Num(vYesterday);
+	LET vMonthNameOfYesterday = Month(vYesterday);
+	LET vLongMonthNameOfToday = Capitalize(Date(vToday, 'MMMM'));
+	LET vTwoDigitYearOfToday = Mid(vYearOfToday, 3, 2);
+	LET vCenturyOfToday = Mid(vYearOfToday, 1, 2);
+	LET vTwoDigitYearOfYesterday = Mid(vYearOfYesterday, 3, 2);
+	LET vCenturyOfYesterday = Mid(vYearOfYesterday, 1, 2);
+
+END SUB
+
+CALL MAKE_DATES;

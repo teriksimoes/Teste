@@ -1,0 +1,936 @@
+//HEADERS
+[MATRICULA_HEADER]:
+LOAD
+	Null() AS matriculaId,
+    Null() AS tipoMatricula,
+    Null() AS dataInicioContrato,
+	Null() AS eSocial,
+	Null() AS formaPagamento,
+	Null() AS situacao,
+    Null() AS grupoFuncionaL,
+    Null() AS concursoId,
+    Null() AS numeroMatricula,
+	Null() AS digitoVerificadorMatricula,
+    Null() AS organogramaId,
+    Null() AS pessoaId,
+    Null() AS nivelSalarial,
+    Null() AS codigoClassificacaoCbo,
+    Null() AS cargo,
+    Null() AS cargoComissionadoFlag,
+    Null() AS vinculoEmpregaticio,
+    Null() AS dataFinalObrigatoriaVinculo,
+    Null() AS vinculoTemporarioFlag
+AutoGenerate 0
+;
+
+[PESSOA_HEADER]:
+LOAD
+	Null() AS pessoaId,
+    Null() AS nome,
+    Null() AS cpf,
+	Null() AS dataNascimento,
+	Null() AS sexo,
+	Null() AS ufEmissaoCtps,
+	Null() AS pis,
+	Null() AS ctps,
+	Null() AS serieCtps,
+	Null() AS grauInstrucao,
+	Null() AS situacaoGrauInstrucao,
+	Null() AS raca,
+	Null() AS quantidadeDependentesIrrf,
+	Null() AS quantidadeDependentesSalarioFamilia,
+	Null() AS mesAniversario,
+    Null() AS tipoLogradouro,
+    Null() AS logradouro,
+    Null() AS numero,
+    Null() AS complemento,
+    Null() AS bairro,
+    Null() AS cidade,
+    Null() AS uf,
+    Null() AS cep,
+	Null() AS telefone
+AutoGenerate 0
+;
+
+
+[ORGANOGRAMA_HEADER]:
+LOAD 
+	Null() AS organogramaId,
+	Null() AS numero,
+	Null() AS nivel,
+	Null() AS organograma
+AutoGenerate 0
+;
+
+[CONCURSO_HEADER]:
+LOAD
+	Null() AS concursoId,
+	Null() AS concurso,
+	Null() AS numeroEdital
+AutoGenerate 0
+;
+
+
+//----------------------------------------
+LIB CONNECT TO 'Padrao_Paineis:API Betha';
+
+let PaginacaoOFF = 'True';
+let offset = 0;
+let limit = 1000;
+
+do 
+exit do when '$(PaginacaoOFF)' = 'False'
+
+		RestConnectorMasterTable:
+    SQL SELECT 
+        "offset",
+        "limit",
+        "total",
+        "hasNext",
+        "__KEY_root",
+        (SELECT 
+            "id" AS "id_u55",
+            "tipo" AS "tipo_u5",
+            "geraRegistroPreliminar",
+            "dataInicioContrato",
+            "eSocial",
+            "formaPagamento",
+            "origemConcurso",
+            "concursoProcessoSeletivo",
+            "situacao" AS "situacao_u0",
+            "inicioVigencia",
+            "rendimentoMensal",
+            "dataAlteracaoSalarioEsocial",
+            "enviarEsocial",
+            "origem",
+            "rescisao",
+            "isConselheiroTutelar",
+            "regimeClt",
+            "conselheiroTutelar",
+            "estagiario",
+            "aposentado",
+            "pensionista",
+            "autonomo",
+            "contaBancariaPagamento",
+            "concurso",
+            "atoContrato",
+            "atoAlteracaoSalario",
+            "motivoAlteracaoSalario",
+            "jornadaTrabalho",
+            "__KEY_content",
+            "__FK_content",
+            (SELECT 
+                "id",
+                "descricao",
+                "__FK_grupoFuncional"
+            FROM "grupoFuncional" FK "__FK_grupoFuncional"),
+            (SELECT 
+                "id" AS "id_u14",
+                "numero" AS "numero_u0",
+                "digito" AS "digito_u0",
+                "tipo",
+                "dataAbertura",
+                "dataFechamento",
+                "situacao",
+                "principal",
+                "__KEY_contaBancariaPagamento",
+                "__FK_contaBancariaPagamento",
+                (SELECT 
+                    "id" AS "id_u13",
+                    "nome" AS "nome_u10",
+                    "numero",
+                    "digito",
+                    "numeroEndereco",
+                    "cep" AS "cep_u3",
+                    "logradouro",
+                    "bairro",
+                    "municipio",
+                    "__KEY_agencia",
+                    "__FK_agencia",
+                    (SELECT 
+                        "id" AS "id_u0",
+                        "nome",
+                        "numeroBanco",
+                        "sigla",
+                        "cnpj",
+                        "site",
+                        "associadoFebraban",
+                        "__FK_banco"
+                    FROM "banco" FK "__FK_banco"),
+                    (SELECT 
+                        "id" AS "id_u5",
+                        "descricao" AS "descricao_u1",
+                        "cep" AS "cep_u0",
+                        "__KEY_logradouro",
+                        "__FK_logradouro",
+                        (SELECT 
+                            "id" AS "id_u3",
+                            "nome" AS "nome_u2",
+                            "codigoIbge" AS "codigoIbge_u0",
+                            "codigoSiafi",
+                            "cep",
+                            "__KEY_municipio",
+                            "__FK_municipio",
+                            (SELECT 
+                                "id" AS "id_u2",
+                                "nome" AS "nome_u1",
+                                "sigla" AS "sigla_u0",
+                                "codigoIbge",
+                                "__KEY_estado",
+                                "__FK_estado",
+                                (SELECT 
+                                    "id" AS "id_u1",
+                                    "nome" AS "nome_u0",
+                                    "sigla2C",
+                                    "sigla3C",
+                                    "sigla3D",
+                                    "codigoBacen",
+                                    "codigoEsocial",
+                                    "__FK_pais"
+                                FROM "pais" FK "__FK_pais")
+                            FROM "estado" PK "__KEY_estado" FK "__FK_estado")
+                        FROM "municipio" PK "__KEY_municipio" FK "__FK_municipio"),
+                        (SELECT 
+                            "id" AS "id_u4",
+                            "descricao" AS "descricao_u0",
+                            "abreviatura",
+                            "__FK_tipoLogradouro"
+                        FROM "tipoLogradouro" FK "__FK_tipoLogradouro")
+                    FROM "logradouro" PK "__KEY_logradouro" FK "__FK_logradouro"),
+                    (SELECT 
+                        "id" AS "id_u9",
+                        "nome" AS "nome_u6",
+                        "zonaRural",
+                        "__KEY_bairro",
+                        "__FK_bairro",
+                        (SELECT 
+                            "id" AS "id_u8",
+                            "nome" AS "nome_u5",
+                            "codigoIbge" AS "codigoIbge_u2",
+                            "codigoSiafi" AS "codigoSiafi_u0",
+                            "cep" AS "cep_u1",
+                            "__KEY_municipio_u0",
+                            "__FK_municipio_u0",
+                            (SELECT 
+                                "id" AS "id_u7",
+                                "nome" AS "nome_u4",
+                                "sigla" AS "sigla_u1",
+                                "codigoIbge" AS "codigoIbge_u1",
+                                "__KEY_estado_u0",
+                                "__FK_estado_u0",
+                                (SELECT 
+                                    "id" AS "id_u6",
+                                    "nome" AS "nome_u3",
+                                    "sigla2C" AS "sigla2C_u0",
+                                    "sigla3C" AS "sigla3C_u0",
+                                    "sigla3D" AS "sigla3D_u0",
+                                    "codigoBacen" AS "codigoBacen_u0",
+                                    "codigoEsocial" AS "codigoEsocial_u0",
+                                    "__FK_pais_u0"
+                                FROM "pais" FK "__FK_pais_u0")
+                            FROM "estado" PK "__KEY_estado_u0" FK "__FK_estado_u0")
+                        FROM "municipio" PK "__KEY_municipio_u0" FK "__FK_municipio_u0")
+                    FROM "bairro" PK "__KEY_bairro" FK "__FK_bairro"),
+                    (SELECT 
+                        "id" AS "id_u12",
+                        "nome" AS "nome_u9",
+                        "codigoIbge" AS "codigoIbge_u4",
+                        "codigoSiafi" AS "codigoSiafi_u1",
+                        "cep" AS "cep_u2",
+                        "__KEY_municipio_u1",
+                        "__FK_municipio_u1",
+                        (SELECT 
+                            "id" AS "id_u11",
+                            "nome" AS "nome_u8",
+                            "sigla" AS "sigla_u2",
+                            "codigoIbge" AS "codigoIbge_u3",
+                            "__KEY_estado_u1",
+                            "__FK_estado_u1",
+                            (SELECT 
+                                "id" AS "id_u10",
+                                "nome" AS "nome_u7",
+                                "sigla2C" AS "sigla2C_u1",
+                                "sigla3C" AS "sigla3C_u1",
+                                "sigla3D" AS "sigla3D_u1",
+                                "codigoBacen" AS "codigoBacen_u1",
+                                "codigoEsocial" AS "codigoEsocial_u1",
+                                "__FK_pais_u1"
+                            FROM "pais" FK "__FK_pais_u1")
+                        FROM "estado" PK "__KEY_estado_u1" FK "__FK_estado_u1")
+                    FROM "municipio" PK "__KEY_municipio_u1" FK "__FK_municipio_u1")
+                FROM "agencia" PK "__KEY_agencia" FK "__FK_agencia")
+            FROM "contaBancariaPagamento" PK "__KEY_contaBancariaPagamento" FK "__FK_contaBancariaPagamento"),
+            (SELECT 
+                "id" AS "id_u15",
+                "descricao" AS "descricao_u2",
+                "numeroEdital",
+                "__FK_concurso"
+            FROM "concurso" FK "__FK_concurso"),
+            (SELECT 
+                "id" AS "id_u17",
+                "numeroOficial",
+                "ementa",
+                "__KEY_atoContrato",
+                "__FK_atoContrato",
+                (SELECT 
+                    "id" AS "id_u16",
+                    "descricao" AS "descricao_u3",
+                    "classificacao",
+                    "__FK_tipo"
+                FROM "tipo" FK "__FK_tipo")
+            FROM "atoContrato" PK "__KEY_atoContrato" FK "__FK_atoContrato"),
+            (SELECT 
+                "numero" AS "numero_u1",
+                "contrato",
+                "digitoVerificador",
+                "__FK_codigoMatricula"
+            FROM "codigoMatricula" FK "__FK_codigoMatricula"),
+            (SELECT 
+                "id" AS "id_u19",
+                "numeroOficial" AS "numeroOficial_u0",
+                "ementa" AS "ementa_u0",
+                "__KEY_atoAlteracaoSalario",
+                "__FK_atoAlteracaoSalario",
+                (SELECT 
+                    "id" AS "id_u18",
+                    "descricao" AS "descricao_u4",
+                    "classificacao" AS "classificacao_u0",
+                    "__FK_tipo_u0"
+                FROM "tipo" FK "__FK_tipo_u0")
+            FROM "atoAlteracaoSalario" PK "__KEY_atoAlteracaoSalario" FK "__FK_atoAlteracaoSalario"),
+            (SELECT 
+                "id" AS "id_u20",
+                "descricao" AS "descricao_u5",
+                "__FK_motivoAlteracaoSalario"
+            FROM "motivoAlteracaoSalario" FK "__FK_motivoAlteracaoSalario"),
+            (SELECT 
+                "id" AS "id_u23",
+                "numero" AS "numero_u2",
+                "nivel" AS "nivel_u0",
+                "descricao" AS "descricao_u8",
+                "__KEY_organograma",
+                "__FK_organograma",
+                (SELECT 
+                    "id" AS "id_u22",
+                    "descricao" AS "descricao_u7",
+                    "emUso",
+                    "__KEY_configuracao",
+                    "__FK_configuracao",
+                    (SELECT 
+                        "id" AS "id_u21",
+                        "descricao" AS "descricao_u6",
+                        "nivelSecretaria",
+                        "nivel",
+                        "quantidadeDigitos",
+                        "separador",
+                        "__FK_niveis"
+                    FROM "niveis" FK "__FK_niveis")
+                FROM "configuracao" PK "__KEY_configuracao" FK "__FK_configuracao")
+            FROM "organograma" PK "__KEY_organograma" FK "__FK_organograma"),
+            (SELECT 
+                "id" AS "id_u31",
+                "nome" AS "nome_u14",
+                "cpf",
+                "dataNascimento",
+                "sexo",
+                "ufEmissaoCtps",
+                "pis",
+                "ctps",
+                "serieCtps",
+                "grauInstrucao",
+                "situacaoGrauInstrucao",
+                "raca",
+                "quantidadeDependentesIrrf",
+                "quantidadeDependentesSalarioFamilia",
+                "mesAniversario",
+                "email",
+                "endereco",
+                "telefone",
+                "__KEY_pessoa",
+                "__FK_pessoa",
+                (SELECT 
+                    "@Value",
+                    "__FK_deficiencias"
+                FROM "deficiencias" FK "__FK_deficiencias" ArrayValueAlias "@Value"),
+                (SELECT 
+                    "id" AS "id_u28",
+                    "cep" AS "cep_u4",
+                    "numero" AS "numero_u3",
+                    "complemento",
+                    "__KEY_endereco",
+                    "__FK_endereco",
+                    (SELECT 
+                        "id" AS "id_u25",
+                        "descricao" AS "descricao_u10",
+                        "__KEY_logradouro_u0",
+                        "__FK_logradouro_u0",
+                        (SELECT 
+                            "id" AS "id_u24",
+                            "descricao" AS "descricao_u9",
+                            "__FK_tipoLogradouro_u0"
+                        FROM "tipoLogradouro" FK "__FK_tipoLogradouro_u0")
+                    FROM "logradouro" PK "__KEY_logradouro_u0" FK "__FK_logradouro_u0"),
+                    (SELECT 
+                        "id" AS "id_u27",
+                        "nome" AS "nome_u12",
+                        "__KEY_bairro_u0",
+                        "__FK_bairro_u0",
+                        (SELECT 
+                            "id" AS "id_u26",
+                            "nome" AS "nome_u11",
+                            "uf",
+                            "__FK_municipio_u2"
+                        FROM "municipio" FK "__FK_municipio_u2")
+                    FROM "bairro" PK "__KEY_bairro_u0" FK "__FK_bairro_u0")
+                FROM "endereco" PK "__KEY_endereco" FK "__FK_endereco"),
+                (SELECT 
+                    "id" AS "id_u29",
+                    "nome" AS "nome_u13",
+                    "tipoFiliacao",
+                    "__FK_filiacao"
+                FROM "filiacao" FK "__FK_filiacao"),
+                (SELECT 
+                    "id" AS "id_u30",
+                    "descricao" AS "descricao_u11",
+                    "tipo" AS "tipo_u0",
+                    "numero" AS "numero_u4",
+                    "__FK_telefone"
+                FROM "telefone" FK "__FK_telefone")
+            FROM "pessoa" PK "__KEY_pessoa" FK "__FK_pessoa"),
+            (SELECT 
+                "id" AS "id_u35",
+                "cargaHorariaSemanal",
+                "__KEY_jornadaTrabalho",
+                "__FK_jornadaTrabalho",
+                (SELECT 
+                    "id" AS "id_u34",
+                    "dia",
+                    "__KEY_periodos",
+                    "__FK_periodos",
+                    (SELECT 
+                        "id" AS "id_u33",
+                        "codigo",
+                        "entrada",
+                        "saida",
+                        "__KEY_horario",
+                        "__FK_horario",
+                        (SELECT 
+                            "id" AS "id_u32",
+                            "hora",
+                            "__FK_marcacoes"
+                        FROM "marcacoes" FK "__FK_marcacoes"),
+                        (SELECT 
+                            "@Value" AS "@Value_u0",
+                            "__FK_intervalos"
+                        FROM "intervalos" FK "__FK_intervalos" ArrayValueAlias "@Value_u0")
+                    FROM "horario" PK "__KEY_horario" FK "__FK_horario")
+                FROM "periodos" PK "__KEY_periodos" FK "__FK_periodos")
+            FROM "jornadaTrabalho" PK "__KEY_jornadaTrabalho" FK "__FK_jornadaTrabalho"),
+            (SELECT 
+                "dataBase" AS "dataBase_u0",
+                "tipoAdmissao",
+                "contaFgts",
+                "naturezaAtividade",
+                "primeiroEmprego",
+                "optanteFgts",
+                "dataOpcao",
+                "tipoProvimento",
+                "dataNomeacao",
+                "dataPosse",
+                "areaAtuacao",
+                "ocupaVaga",
+                "tempoAposentadoria",
+                "previdenciaFederal",
+                "nProcessoTrabalhista",
+                "recebeAbonoPermanencia",
+                "profissionalSaudeSegurancaPublica",
+                "inicioAbonoPermanencia",
+                "observacaoContrato",
+                "descricaoSalario",
+                "tipoContratoParcial",
+                "cargoAlterado",
+                "atoAlteracaoCargo",
+                "motivoAlteracaoCargo",
+                "salarioAlterado",
+                "cargoComissionado",
+                "areaAtuacaoComissionado",
+                "ocupaVagaComissionado",
+                "salarioComissionado",
+                "dataSaidaCargoComissionado",
+                "atoSaidaCargoComissionado",
+                "cargoComissionadoAdicionado",
+                "atoAlteracaoSalarioComissionado",
+                "motivoAlteracaoSalarioComissionado",
+                "salarioComissionadoAlterado",
+                "unidadePagamento",
+                "quantidadeHorasMes",
+                "quantidadeHorasSemana",
+                "jornadaParcial",
+                "indicativoAdmissao",
+                "classeReferencia",
+                "indicativoProvimento",
+                "orgaoOrigem",
+                "matriculaEmpresaOrigem",
+                "dataAdmissaoOrigem",
+                "recebido",
+                "ocorrenciaSefip",
+                "controleJornada",
+                "dataTerminoContratoTemporario",
+                "inicioTurnoCorrido",
+                "registraPonto",
+                "compensaHoras",
+                "numeroCartaoPonto",
+                "motivoContratoTemporario",
+                "hipoteseLegalContratoTemporario",
+                "prazoDeterminadoContratoTemporario",
+                "clausulaAssecuratoriaContratoTemporario",
+                "dataAgendamentoRescisao",
+                "tipoContratacaoAprendiz",
+                "cnpjEntidadeQualificadora",
+                "controlaPerAquisFeriasAntesAdmissao",
+                "dataInicialPeriodoAquisitivoFeriasAntesAdmissao",
+                "camposAdicionais",
+                "previdenciaEstadual",
+                "previdenciaFundoAssistencia",
+                "previdenciaFundoPrevidencia",
+                "previdenciaFundoFinanceiro",
+                "leiContrato",
+                "nivelSalarial",
+                "parametroPonto",
+                "sindicato",
+                "__KEY_funcionario",
+                "__FK_funcionario",
+                (SELECT 
+                    "id" AS "id_u37",
+                    "numeroOficial" AS "numeroOficial_u1",
+                    "ementa" AS "ementa_u1",
+                    "__KEY_leiContrato",
+                    "__FK_leiContrato",
+                    (SELECT 
+                        "id" AS "id_u36",
+                        "descricao" AS "descricao_u12",
+                        "classificacao" AS "classificacao_u1",
+                        "__FK_tipo_u1"
+                    FROM "tipo" FK "__FK_tipo_u1")
+                FROM "leiContrato" PK "__KEY_leiContrato" FK "__FK_leiContrato"),
+                (SELECT 
+                    "id" AS "id_u38",
+                    "descricao" AS "descricao_u13",
+                    "sefip",
+                    "geraCaged",
+                    "dataFinalObrigatoria",
+                    "vinculoTemporario",
+                    "tipo" AS "tipo_u1",
+                    "__FK_vinculoEmpregaticio"
+                FROM "vinculoEmpregaticio" FK "__FK_vinculoEmpregaticio"),
+                (SELECT 
+                    "id" AS "id_u39",
+                    "tipo" AS "tipo_u3",
+                    "razaoSocial",
+                    "nomeFantasia",
+                    "cnpj" AS "cnpj_u0",
+                    "__KEY_sindicato",
+                    "__FK_sindicato",
+                    (SELECT 
+                        "tipo" AS "tipo_u2",
+                        "mesContribuicao",
+                        "numero" AS "numero_u5",
+                        "diasAviso",
+                        "dataBase",
+                        "__FK_sindicato_u0"
+                    FROM "sindicato" FK "__FK_sindicato_u0")
+                FROM "sindicato" PK "__KEY_sindicato" FK "__FK_sindicato"),
+                (SELECT 
+                    "@Value" AS "@Value_u1",
+                    "__FK_previdencias"
+                FROM "previdencias" FK "__FK_previdencias" ArrayValueAlias "@Value_u1"),
+                (SELECT 
+                    "id" AS "id_u42",
+                    "descricao" AS "descricao_u16",
+                    "__KEY_cargo",
+                    "__FK_cargo",
+                    (SELECT 
+                        "id" AS "id_u40",
+                        "descricao" AS "descricao_u14",
+                        "classificacao" AS "classificacao_u2",
+                        "__FK_tipo_u2"
+                    FROM "tipo" FK "__FK_tipo_u2"),
+                    (SELECT 
+                        "id" AS "id_u41",
+                        "codigoClassificacao",
+                        "descricao" AS "descricao_u15",
+                        "nivel" AS "nivel_u1",
+                        "__FK_cbo"
+                    FROM "cbo" FK "__FK_cbo")
+                FROM "cargo" PK "__KEY_cargo" FK "__FK_cargo"),
+                (SELECT 
+                    "id" AS "id_u43",
+                    "descricao" AS "descricao_u17",
+                    "valor",
+                    "cargaHoraria",
+                    "__FK_nivelSalarial"
+                FROM "nivelSalarial" FK "__FK_nivelSalarial"),
+                (SELECT 
+                    "id" AS "id_u44",
+                    "descricao" AS "descricao_u18",
+                    "__FK_configuracaoFerias"
+                FROM "configuracaoFerias" FK "__FK_configuracaoFerias"),
+                (SELECT 
+                    "id" AS "id_u45",
+                    "descricao" AS "descricao_u19",
+                    "__FK_parametroPonto"
+                FROM "parametroPonto" FK "__FK_parametroPonto"),
+                (SELECT 
+                    "id" AS "id_u48",
+                    "descricao" AS "descricao_u22",
+                    "__KEY_cargoComissionado",
+                    "__FK_cargoComissionado",
+                    (SELECT 
+                        "id" AS "id_u46",
+                        "descricao" AS "descricao_u20",
+                        "classificacao" AS "classificacao_u3",
+                        "__FK_tipo_u3"
+                    FROM "tipo" FK "__FK_tipo_u3"),
+                    (SELECT 
+                        "id" AS "id_u47",
+                        "codigoClassificacao" AS "codigoClassificacao_u0",
+                        "descricao" AS "descricao_u21",
+                        "nivel" AS "nivel_u2",
+                        "__FK_cbo_u0"
+                    FROM "cbo" FK "__FK_cbo_u0")
+                FROM "cargoComissionado" PK "__KEY_cargoComissionado" FK "__FK_cargoComissionado"),
+                (SELECT 
+                    "id" AS "id_u50",
+                    "numeroOficial" AS "numeroOficial_u2",
+                    "ementa" AS "ementa_u2",
+                    "__KEY_atoAlteracaoSalarioComissionado",
+                    "__FK_atoAlteracaoSalarioComissionado",
+                    (SELECT 
+                        "id" AS "id_u49",
+                        "descricao" AS "descricao_u23",
+                        "classificacao" AS "classificacao_u4",
+                        "__FK_tipo_u4"
+                    FROM "tipo" FK "__FK_tipo_u4")
+                FROM "atoAlteracaoSalarioComissionado" PK "__KEY_atoAlteracaoSalarioComissionado" FK "__FK_atoAlteracaoSalarioComissionado"),
+                (SELECT 
+                    "id" AS "id_u51",
+                    "descricao" AS "descricao_u24",
+                    "__FK_motivoAlteracaoSalarioComissionado"
+                FROM "motivoAlteracaoSalarioComissionado" FK "__FK_motivoAlteracaoSalarioComissionado"),
+                (SELECT 
+                    "id" AS "id_u52",
+                    "classe",
+                    "referencia",
+                    "classeTce",
+                    "referenciaTce",
+                    "__FK_classeReferencia"
+                FROM "classeReferencia" FK "__FK_classeReferencia")
+            FROM "funcionario" PK "__KEY_funcionario" FK "__FK_funcionario"),
+            (SELECT 
+                "id" AS "id_u54",
+                "data",
+                "__KEY_rescisao",
+                "__FK_rescisao",
+                (SELECT 
+                    "id" AS "id_u53",
+                    "tipo" AS "tipo_u4",
+                    "classificacaoCaged",
+                    "classificacaoSefip",
+                    "classificacaoSaqueFgts",
+                    "codigoSaqueFgts",
+                    "classificacao" AS "classificacao_u5",
+                    "__FK_motivoRescisao"
+                FROM "motivoRescisao" FK "__FK_motivoRescisao")
+            FROM "rescisao" PK "__KEY_rescisao" FK "__FK_rescisao")
+        FROM "content" PK "__KEY_content" FK "__FK_content")
+    FROM JSON (wrap on) "root" PK "__KEY_root"
+        WITH CONNECTION (
+		URL "https://folha.suite.betha.cloud/dados/v1/matriculas?offset=$(offset)&limit=$(limit)",
+		HTTPHEADER "Authorization" "$(BEARER_TOKEN)",
+	    HTTPHEADER "User-Access" "$(USER_ACCESS)"
+		);
+
+		//MATRICULA
+
+		[MATRICULA_TEMP]:
+		LOAD	
+			[id_u55] AS matriculaId,
+			[tipo_u5] AS tipoMatricula,
+			[dataInicioContrato],
+			[eSocial],
+			[formaPagamento],
+			[situacao_u0] AS situacao,
+			[__KEY_content],
+			[__FK_content] AS [__KEY_root]
+		RESIDENT RestConnectorMasterTable
+		WHERE NOT IsNull([__FK_content])
+		;
+
+		LEFT JOIN ( [MATRICULA_TEMP] )
+		LOAD
+			[descricao] AS grupoFuncionaL,
+			[__FK_grupoFuncional] AS [__KEY_content]
+		RESIDENT RestConnectorMasterTable
+		WHERE NOT IsNull([__FK_grupoFuncional]);
+
+		LEFT JOIN ( [MATRICULA_TEMP] )
+		LOAD	
+			[id_u15] AS concursoId,
+			[__FK_concurso] AS [__KEY_content]
+		RESIDENT RestConnectorMasterTable
+		WHERE NOT IsNull([__FK_concurso]);
+
+		LEFT JOIN ( [MATRICULA_TEMP] )
+		LOAD	
+			[numero_u1] AS numeroMatricula,
+			[digitoVerificador] as digitoVerificadorMatricula,
+			[__FK_codigoMatricula] AS [__KEY_content]
+		RESIDENT RestConnectorMasterTable
+		WHERE NOT IsNull([__FK_codigoMatricula]);
+
+		LEFT JOIN ( [MATRICULA_TEMP] )
+		LOAD	
+			[id_u23] AS organogramaId,
+			[__FK_organograma] AS [__KEY_content]
+		RESIDENT RestConnectorMasterTable
+		WHERE NOT IsNull([__FK_organograma]);
+
+		LEFT JOIN ( [MATRICULA_TEMP] )
+		LOAD	
+			[id_u31] AS pessoaId,
+			[__FK_pessoa] AS [__KEY_content]
+		RESIDENT RestConnectorMasterTable
+		WHERE NOT IsNull([__FK_pessoa]);
+        
+        LEFT JOIN ( [MATRICULA_TEMP] )
+        LOAD	
+            [__KEY_funcionario],
+            [__FK_funcionario] AS [__KEY_content]
+        RESIDENT RestConnectorMasterTable;
+
+
+        LEFT JOIN ( [MATRICULA_TEMP] )
+        LOAD	
+            [descricao_u17] AS nivelSalarial,
+            [__FK_nivelSalarial] AS [__KEY_funcionario]
+        RESIDENT RestConnectorMasterTable;
+
+
+        LEFT JOIN ( [MATRICULA_TEMP] )
+        LOAD	
+            [__KEY_cargo],
+            [__FK_cargo] AS [__KEY_funcionario]
+        RESIDENT RestConnectorMasterTable;
+
+        LEFT JOIN ( [MATRICULA_TEMP] )
+        LOAD	
+            [codigoClassificacao] AS codigoClassificacaoCbo,
+            [descricao_u15] AS cargo ,
+            [__FK_cbo] AS [__KEY_cargo]
+        RESIDENT RestConnectorMasterTable;
+        
+        LEFT JOIN ( [MATRICULA_TEMP] )
+        LOAD
+        	'1' AS cargoComissionadoFlag,
+            [__FK_cargoComissionado] AS [__KEY_funcionario]
+        RESIDENT RestConnectorMasterTable;
+        
+        LEFT JOIN ( [MATRICULA_TEMP] )
+        LOAD	
+            [descricao_u13] AS vinculoEmpregaticio,
+            [dataFinalObrigatoria] as dataFinalObrigatoriaVinculo,
+            [vinculoTemporario],
+            [__FK_vinculoEmpregaticio] AS [__KEY_funcionario]
+        RESIDENT RestConnectorMasterTable;
+
+
+		CONCATENATE ( [MATRICULA_HEADER] )
+		LOAD
+			matriculaId,
+			tipoMatricula,
+			[dataInicioContrato],
+			[eSocial],
+			[formaPagamento],
+			situacao,
+			grupoFuncionaL,
+			concursoId,
+			numeroMatricula,
+			digitoVerificadorMatricula,
+			organogramaId,
+			pessoaId,
+            nivelSalarial,
+            codigoClassificacaoCbo,
+            cargo,
+            cargoComissionadoFlag,
+            vinculoEmpregaticio,
+            dataFinalObrigatoriaVinculo,
+            If([vinculoTemporario] = 'True', 1 , 0) as vinculoTemporarioFlag
+		RESIDENT [MATRICULA_TEMP];
+
+		DROP TABLE MATRICULA_TEMP;
+
+		//PESSOA
+		[PESSOA_TEMP]:
+		LOAD	
+			[id_u31] AS pessoaId,
+			[nome_u14] AS nome,
+			[cpf],
+			[dataNascimento],
+			[sexo],
+			[ufEmissaoCtps],
+			[pis],
+			[ctps],
+			[serieCtps],
+			[grauInstrucao],
+			[situacaoGrauInstrucao],
+			[raca],
+			[quantidadeDependentesIrrf],
+			[quantidadeDependentesSalarioFamilia],
+			[mesAniversario],
+			[email],
+			[endereco],
+			[telefone],
+			[__KEY_pessoa],
+			[__FK_pessoa] AS [__KEY_content]
+		RESIDENT RestConnectorMasterTable
+		WHERE NOT IsNull([__FK_pessoa]);
+
+		LEFT JOIN ( [PESSOA_TEMP] )
+		LOAD	
+			[cep_u4] AS cep,
+			[numero_u3] AS numero,
+			[complemento],
+			[__KEY_endereco],
+			[__FK_endereco] AS [__KEY_pessoa]
+		RESIDENT RestConnectorMasterTable
+		WHERE NOT IsNull([__FK_endereco]);
+
+		LEFT JOIN ( [PESSOA_TEMP] )
+		LOAD
+			[descricao_u10] AS logradouro,
+			[__KEY_logradouro_u0],
+			[__FK_logradouro_u0] AS [__KEY_endereco]
+		RESIDENT RestConnectorMasterTable
+		WHERE NOT IsNull([__FK_logradouro_u0]);
+
+		LEFT JOIN ( [PESSOA_TEMP] )
+		LOAD	
+			[descricao_u9] AS tipoLogradouro,
+			[__FK_tipoLogradouro_u0] AS [__KEY_logradouro_u0]
+		RESIDENT RestConnectorMasterTable
+		WHERE NOT IsNull([__FK_tipoLogradouro_u0]);
+
+		LEFT JOIN ( [PESSOA_TEMP] )
+		LOAD	
+			[nome_u12] AS bairro,
+			[__KEY_bairro_u0],
+			[__FK_bairro_u0] AS [__KEY_endereco]
+		RESIDENT RestConnectorMasterTable
+		WHERE NOT IsNull([__FK_bairro_u0]);
+
+		LEFT JOIN ( [PESSOA_TEMP] )
+		LOAD
+			[nome_u11] AS cidade,
+			[uf] as uf,
+			[__FK_municipio_u2] AS [__KEY_bairro_u0]
+		RESIDENT RestConnectorMasterTable
+		WHERE NOT IsNull([__FK_municipio_u2]);
+
+		LEFT JOIN ( [PESSOA_TEMP] )
+		LOAD
+			[numero_u4] AS telefone,
+			[__FK_telefone] AS [__KEY_pessoa]
+		RESIDENT RestConnectorMasterTable
+		WHERE NOT IsNull([__FK_telefone]);
+
+
+		CONCATENATE ( [PESSOA_HEADER] )
+		LOAD DISTINCT 
+			pessoaId,
+			nome,
+			[cpf],
+			[dataNascimento],
+			[sexo],
+			[ufEmissaoCtps],
+			[pis],
+			[ctps],
+			[serieCtps],
+			[grauInstrucao],
+			[situacaoGrauInstrucao],
+			[raca],
+			[quantidadeDependentesIrrf],
+			[quantidadeDependentesSalarioFamilia],
+			[mesAniversario],
+			tipoLogradouro,
+			logradouro,
+			numero,
+			[complemento],
+			bairro,
+			cidade,
+			uf,
+			cep,
+			telefone   
+		RESIDENT [PESSOA_TEMP];
+
+		DROP TABLE [PESSOA_TEMP];
+
+
+		//ORGANOGRAMA
+		[ORGANOGRAMA_TEMP]:
+		LOAD	
+			[id_u23] AS organogramaId,
+			[numero_u2] AS numero,
+			[nivel_u0] AS nivel,
+			[descricao_u8] AS organograma,
+			[__KEY_organograma],
+			[__FK_organograma] AS [__KEY_content]
+		RESIDENT RestConnectorMasterTable
+		WHERE NOT IsNull([__FK_organograma]);
+
+		CONCATENATE ( [ORGANOGRAMA_HEADER] )
+		LOAD DISTINCT
+			organogramaId,
+			numero,
+			nivel,
+			organograma
+		RESIDENT [ORGANOGRAMA_TEMP];
+
+		DROP TABLE [ORGANOGRAMA_TEMP];
+
+
+
+		//CONCURSO
+		CONCATENATE ( [CONCURSO_HEADER] )
+		LOAD	[id_u15] AS concursoId,
+			[descricao_u2] AS concurso,
+			[numeroEdital]
+		RESIDENT RestConnectorMasterTable
+		WHERE NOT IsNull([__FK_concurso]);
+
+
+		[root]:
+		LOAD	[offset],
+			[limit],
+			[total],
+			[hasNext],
+			[__KEY_root]
+		RESIDENT RestConnectorMasterTable
+		WHERE NOT IsNull([__KEY_root]);
+
+		let PaginacaoOFF = peek('hasNext',0,'root');
+		let offset = $(offset) + 1000;
+
+		DROP TABLE RestConnectorMasterTable;
+		DROP TABLE root;
+
+loop
+
+
+STORE [MATRICULA_HEADER] INTO [lib://Padrao_Dados:DataFiles/Extraido/Dimensao/Matricula.qvd](qvd);
+STORE [PESSOA_HEADER] INTO [lib://Padrao_Dados:DataFiles/Extraido/Dimensao/Pessoa.qvd](qvd);
+STORE [ORGANOGRAMA_HEADER] INTO [lib://Padrao_Dados:DataFiles/Extraido/Dimensao/Organograma.qvd](qvd);
+STORE [CONCURSO_HEADER] INTO [lib://Padrao_Dados:DataFiles/Extraido/Dimensao/Concurso.qvd](qvd);
+
+
+DROP TABLES [MATRICULA_HEADER], [PESSOA_HEADER], [ORGANOGRAMA_HEADER], [CONCURSO_HEADER];
+

@@ -1,0 +1,37 @@
+SUB RUN
+
+    LOG_CARGA:
+	LOAD
+		Null() as CARGA
+		, Null() as HORA_INICIO
+		, Null() as HORA_FIM
+		, Null() as QUANTIDADE
+		, Null() as OWNER
+	AutoGenerate 0;
+
+    LET _LOG_START = Now();
+    LET _LOG_NO_OF_ROWS = '';
+    LET _APP_RUN = '$(_SCRIPT_ROOT)/$(APP_NAME).qvs'
+
+    TRACE;
+	TRACE =========================================================;
+	TRACE EXECUTANDO: $(_APP_RUN);
+	TRACE =========================================================;
+	TRACE;
+
+    
+    $(Include=$(_APP_RUN));
+
+    LET _LOG_FINISH = Now();
+
+    CONCATENATE ( LOG_CARGA )
+	LOAD
+		'$(_APP_RUN)' AS CARGA
+		, '$(_LOG_START)' AS HORA_INICIO
+		, '$(_LOG_FINISH)' AS HORA_FIM
+		, '$(_LOG_NO_OF_ROWS)' AS QUANTIDADE
+		, '$(OWNER)' AS OWNER
+	AutoGenerate 1;
+
+END SUB
+
